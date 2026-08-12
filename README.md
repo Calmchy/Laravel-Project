@@ -3,4 +3,4 @@ System Arch &amp; Integ
 
 ## Members
 ### John Paul Lelis
-### Geonard Bayot
+### Geonard Pagaduan
