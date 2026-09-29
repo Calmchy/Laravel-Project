@@ -1,7 +1,7 @@
 import { Head } from '@inertiajs/react';
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import { dashboard } from '@/routes';
-import { Search, ArrowRight, UserPlus, Sparkles, Car } from 'lucide-react';
+import { Search, ArrowRight} from 'lucide-react';
 
 export default function Dashboard() {
     return (
@@ -89,7 +89,7 @@ export default function Dashboard() {
     <div className="flex flex-col items-center rounded-xl border border-neutral-200 p-6 text-center dark:border-neutral-800">
         <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-500/10">
          
-            {/* <UserPlus className="h-8 w-8 text-red-500" /> */}
+
         </div>
         <h3 className="text-lg font-bold uppercase tracking-wide text-neutral-900 dark:text-white">
             First Time Renter
@@ -106,7 +106,7 @@ export default function Dashboard() {
     <div className="flex flex-col items-center rounded-xl border border-neutral-200 p-6 text-center dark:border-neutral-800">
         <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-500/10">
            
-            {/* <Sparkles className="h-8 w-8 text-red-500" /> */}
+           
         </div>
         <h3 className="text-lg font-bold uppercase tracking-wide text-neutral-900 dark:text-white">
             New Vehicles
@@ -123,7 +123,7 @@ export default function Dashboard() {
     <div className="flex flex-col items-center rounded-xl border border-neutral-200 p-6 text-center dark:border-neutral-800">
         <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-500/10">
            
-            {/* <Car className="h-8 w-8 text-red-500" /> */}
+            
         </div>
         <h3 className="text-lg font-bold uppercase tracking-wide text-neutral-900 dark:text-white">
             Book a Ride
