@@ -5,89 +5,12 @@ import { Search, ArrowRight} from 'lucide-react';
 
 export default function Dashboard() {
     return (
-        <>
+        <>git 
             <Head title="Dashboard" />
-<<<<<<< HEAD
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 
                     <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
                         <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-=======
-           <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-                <div className="relative min-h-[80vh] flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                    <img
-                        src="/background.jpg"
-                        alt="Van in the mountains"
-                        className="absolute inset-0 h-full w-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-black/30" />
-
-                    <div className="relative flex h-full flex-col">
-                        <nav className="flex items-center justify-between px-6 py-6 md:px-10">
-                            <div className="flex items-center gap-2 text-white">
-                                <svg viewBox="0 0 24 24" fill="none" className="h-6 w-6">
-                                    <path d="M20 12L4 4l4 8-4 8 16-8z" fill="currentColor" />
-                                </svg>
-                                <span className="text-lg font-semibold tracking-wide">
-                                    Ride Nova PH
-                                </span>
-                            </div>
-
-                            <div className="hidden items-center rounded-full bg-white/10 px-3 py-2 backdrop-blur-sm md:flex">
-                                <input
-                                    type="text"
-                                    placeholder="Search"
-                                    className="w-32 bg-transparent text-sm text-white placeholder-white/70 outline-none"
-                                />
-                                <Search className="h-4 w-4 text-white" />
-                            </div>
-                        </nav>
-
-                        <div className="flex flex-1 flex-col items-center justify-center px-6 text-center">
-                            <h1 className="max-w-3xl text-3xl font-extrabold uppercase tracking-wide text-white sm:text-4xl md:text-5xl">
-                                Set Your Travel Destination
-                            </h1>
-                            <div className="mt-6 h-px w-32 bg-white/60" />
-
-                            <div className="mt-10 flex w-full max-w-2xl flex-col gap-3 rounded-full bg-white/10 p-2 backdrop-blur-md sm:flex-row sm:items-center">
-                                <div className="flex-1 rounded-full px-6 py-3 text-left">
-                                    <p className="text-xs uppercase tracking-wide text-white/70">
-                                        Location
-                                    </p>
-                                    <input
-                                        type="text"
-                                        placeholder="Where from?"
-                                        className="w-full bg-transparent text-sm text-white placeholder-white/60 outline-none"
-                                    />
-                                </div>
-                                <div className="hidden h-8 w-px bg-white/30 sm:block" />
-                                <div className="flex-1 rounded-full px-6 py-3 text-left">
-                                    <p className="text-xs uppercase tracking-wide text-white/70">
-                                        Pick Up Date
-                                    </p>
-                                    <input
-                                        type="date"
-                                        className="w-full bg-transparent text-sm text-white outline-none [color-scheme:dark]"
-                                    />
-                                </div>
-                                <div className="hidden h-8 w-px bg-white/30 sm:block" />
-                                <div className="flex-1 rounded-full px-6 py-3 text-left">
-                                    <p className="text-xs uppercase tracking-wide text-white/70">
-                                        Return Date
-                                    </p>
-                                    <input
-                                        type="date"
-                                        className="w-full bg-transparent text-sm text-white outline-none [color-scheme:dark]"
-                                    />
-                                </div>
-                            </div>
-
-                            <button className="mt-16 mb-10 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold uppercase tracking-wide text-neutral-900 transition hover:bg-white/90">
-                                Learn More
-                                <ArrowRight className="h-4 w-4" />
-                            </button>
-                        </div>
->>>>>>> origin
                     </div>
                 </div>
             </div>
