@@ -5,7 +5,7 @@ import { Search, ArrowRight} from 'lucide-react';
 
 export default function Dashboard() {
     return (
-        <>git 
+        <> 
             <Head title="Dashboard" />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
