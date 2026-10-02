@@ -19,9 +19,7 @@ export default function Dashboard() {
                     <div className="relative flex h-full flex-col">
                         <nav className="flex items-center justify-between px-6 py-6 md:px-10">
                             <div className="flex items-center gap-2 text-white">
-                                <svg viewBox="0 0 24 24" fill="none" className="h-6 w-6">
-                                    <path d="M20 12L4 4l4 8-4 8 16-8z" fill="currentColor" />
-                                </svg>
+                                
                               
                             </div>
 
