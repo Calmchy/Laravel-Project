@@ -1,4 +1,4 @@
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import { dashboard } from '@/routes';
 import { Search, ArrowRight} from 'lucide-react';
@@ -22,9 +22,7 @@ export default function Dashboard() {
                                 <svg viewBox="0 0 24 24" fill="none" className="h-6 w-6">
                                     <path d="M20 12L4 4l4 8-4 8 16-8z" fill="currentColor" />
                                 </svg>
-                                <span className="text-lg font-semibold tracking-wide">
-                                    Ride Nova PH
-                                </span>
+                              
                             </div>
 
                             <div className="hidden items-center rounded-full bg-white/10 px-3 py-2 backdrop-blur-sm md:flex">
@@ -76,10 +74,15 @@ export default function Dashboard() {
                                 </div>
                             </div>
 
-                            <button className="mt-16 mb-10 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold uppercase tracking-wide text-neutral-900 transition hover:bg-white/90">
-                                Learn More
-                                <ArrowRight className="h-4 w-4" />
-                            </button>
+                            
+                                  <Link
+    href="/booking"
+    className="mt-16 mb-10 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold tracking-wide text-neutral-900 uppercase"
+>
+    BOOK NOW!
+    <ArrowRight className="h-4 w-4" />
+</Link>
+                           
                         </div>
                     </div>
                 </div>
