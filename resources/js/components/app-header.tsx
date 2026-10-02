@@ -46,7 +46,7 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
-        title: 'About',
+        title: 'About2',
         href: about(),
         icon: Info,
     }
