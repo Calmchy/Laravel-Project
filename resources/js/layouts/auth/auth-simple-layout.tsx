@@ -18,15 +18,15 @@ export default function AuthSimpleLayout({
                     "linear-gradient(90deg, rgba(13,23,20,.85), rgba(13,23,20,.55)), url('/background.jpg')",
             }}
         />
-        <div className="w-full max-w-sm rounded-xl bg-background/85 p-8 backdrop-blur">
+        <div className="w-full max-w-sm rounded-xl border border-white/15 bg-background/50 p-8 backdrop-blur-md">
                 <div className="flex flex-col gap-8">
                     <div className="flex flex-col items-center gap-4">
                         <Link
                             href={home()}
                             className="flex flex-col items-center gap-2 font-medium"
                         >
-                            <div className="mb-1 flex h-9 w-9 items-center justify-center rounded-md">
-                                <AppLogoIcon className="size-9 fill-current text-[var(--foreground)] dark:text-white" />
+                            <div className="mb-1 flex h-24 w-24 items-center justify-center rounded-md">
+                                <AppLogoIcon className="size-24" />
                             </div>
                             <span className="sr-only">{title}</span>
                         </Link>
