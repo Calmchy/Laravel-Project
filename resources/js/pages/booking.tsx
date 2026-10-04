@@ -49,7 +49,7 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 }
 
 export default function Booking() {
-    // Kinukuha ang location/dates kung galing sa dashboard: /booking?location=...&pickup=...&return=...
+    
     const { url } = usePage();
     const query = new URLSearchParams(url.split('?')[1] ?? '');
 
@@ -75,7 +75,6 @@ export default function Booking() {
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
-        // TODO: ipadala sa backend (POST /booking) kapag may bookings table na
         setSubmitted(true);
         window.scrollTo({ top: 0 });
     };

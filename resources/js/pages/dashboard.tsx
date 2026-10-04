@@ -1,9 +1,11 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
+import { useEffect } from 'react';
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import { dashboard } from '@/routes';
-import { Search, ArrowRight} from 'lucide-react';
+import { Search, ArrowRight, UserRound, CarTaxiFront, Book} from 'lucide-react';
 
 export default function Dashboard() {
+    
     return (
         <>
             <Head title="Dashboard" />
@@ -37,9 +39,9 @@ export default function Dashboard() {
                             <h1 className="max-w-3xl text-3xl font-extrabold uppercase tracking-wide text-white sm:text-4xl md:text-5xl">
                                 Set Your Travel Destination
                             </h1>
-                            <div className="mt-6 h-px w-32 bg-white/60" />
+                            <div  />
 
-                            <div className="mt-10 flex w-full max-w-2xl flex-col gap-3 rounded-full bg-white/10 p-2 backdrop-blur-md sm:flex-row sm:items-center">
+                            {/* <div className="mt-10 flex w-full max-w-2xl flex-col gap-3 rounded-full bg-white/10 p-2 backdrop-blur-md sm:flex-row sm:items-center">
                                 <div className="flex-1 rounded-full px-6 py-3 text-left">
                                     <p className="text-xs uppercase tracking-wide text-white/70">
                                         Location
@@ -69,17 +71,17 @@ export default function Dashboard() {
                                         type="date"
                                         className="w-full bg-transparent text-sm text-white outline-none [color-scheme:dark]"
                                     />
-                                </div>
-                            </div>
+                                </div> 
+                            </div>*/}
 
                             
-                                  <Link
-    href="/booking"
-    className="mt-16 mb-10 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold tracking-wide text-neutral-900 uppercase"
->
-    BOOK NOW!
-    <ArrowRight className="h-4 w-4" />
-</Link>
+                                                        <Link
+                            href="/booking"
+                            className="mt-16 mb-10 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold tracking-wide text-neutral-900 uppercase"
+                        >
+                            BOOK NOW!
+                            <ArrowRight className="h-4 w-4" />
+                        </Link>
                            
                         </div>
                     </div>
@@ -88,11 +90,12 @@ export default function Dashboard() {
             <div className="grid gap-6 rounded-xl border border-sidebar-border/70 bg-white p-6 dark:border-sidebar-border dark:bg-neutral-900 md:grid-cols-3">
   
     <div className="flex flex-col items-center rounded-xl border border-neutral-200 p-6 text-center dark:border-neutral-800">
-        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-500/10">
+        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-600/10">
          
-
+                <UserRound  className='mb-4 w-20 h-20'/>
         </div>
         <h3 className="text-lg font-bold uppercase tracking-wide text-neutral-900 dark:text-white">
+            
             First Time Renter
         </h3>
         <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
@@ -107,7 +110,7 @@ export default function Dashboard() {
     <div className="flex flex-col items-center rounded-xl border border-neutral-200 p-6 text-center dark:border-neutral-800">
         <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-500/10">
            
-           
+           <CarTaxiFront className='mb-4 w-20 h-20' />
         </div>
         <h3 className="text-lg font-bold uppercase tracking-wide text-neutral-900 dark:text-white">
             New Vehicles
@@ -123,7 +126,7 @@ export default function Dashboard() {
 
     <div className="flex flex-col items-center rounded-xl border border-neutral-200 p-6 text-center dark:border-neutral-800">
         <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-500/10">
-           
+           <Book className='mb-4 w-20 h-20' />
             
         </div>
         <h3 className="text-lg font-bold uppercase tracking-wide text-neutral-900 dark:text-white">
@@ -136,6 +139,7 @@ export default function Dashboard() {
             Find a Ride
         </button>
     </div>
+    
 </div>
 
         </>
