@@ -1,17 +1,19 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
+import { useEffect } from 'react';
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import { dashboard } from '@/routes';
-import { Search, ArrowRight} from 'lucide-react';
+import { Search, ArrowRight, UserRound, CarTaxiFront, Book} from 'lucide-react';
 
 export default function Dashboard() {
+    
     return (
         <> 
             <Head title="Dashboard" />
-<<<<<<< HEAD
+<<<<<<<<< Temporary merge branch 1
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
                     <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-=======
+=========
            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 <div className="relative min-h-[80vh] flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
                     <img
@@ -42,9 +44,9 @@ export default function Dashboard() {
                             <h1 className="max-w-3xl text-3xl font-extrabold uppercase tracking-wide text-white sm:text-4xl md:text-5xl">
                                 Set Your Travel Destination
                             </h1>
-                            <div className="mt-6 h-px w-32 bg-white/60" />
+                            <div  />
 
-                            <div className="mt-10 flex w-full max-w-2xl flex-col gap-3 rounded-full bg-white/10 p-2 backdrop-blur-md sm:flex-row sm:items-center">
+                            {/* <div className="mt-10 flex w-full max-w-2xl flex-col gap-3 rounded-full bg-white/10 p-2 backdrop-blur-md sm:flex-row sm:items-center">
                                 <div className="flex-1 rounded-full px-6 py-3 text-left">
                                     <p className="text-xs uppercase tracking-wide text-white/70">
                                         Location
@@ -74,74 +76,78 @@ export default function Dashboard() {
                                         type="date"
                                         className="w-full bg-transparent text-sm text-white outline-none [color-scheme:dark]"
                                     />
-                                </div>
-                            </div>
+                                </div> 
+                            </div>*/}
 
                             
-                                  <Link
-    href="/booking"
-    className="mt-16 mb-10 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold tracking-wide text-neutral-900 uppercase"
->
-    BOOK NOW!
-    <ArrowRight className="h-4 w-4" />
-</Link>
+                                                        <Link
+                            href="/booking"
+                            className="mt-16 mb-10 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold tracking-wide text-neutral-900 uppercase"
+                        >
+                            BOOK NOW!
+                            <ArrowRight className="h-4 w-4" />
+                        </Link>
                            
                         </div>
                     </div>
->>>>>>> lelis
+>>>>>>>>> Temporary merge branch 2
                 </div>
             </div>
             <div className="grid gap-6 rounded-xl border border-sidebar-border/70 bg-white p-6 dark:border-sidebar-border dark:bg-neutral-900 md:grid-cols-3">
   
-            <div className="flex flex-col items-center rounded-xl border border-neutral-200 p-6 text-center dark:border-neutral-800">
-                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-500/10">
-                    
-                </div>
-                <h3 className="text-lg font-bold uppercase tracking-wide text-neutral-900 dark:text-white">
-                    First Time Renter
-                </h3>
-                <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
-                    If this is your first time booking with us
-                </p>
-                <button className="mt-6 w-full rounded-md bg-neutral-800 py-3 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-neutral-700">
-                    How to Book a Ride
-                </button>
-            </div>
+    <div className="flex flex-col items-center rounded-xl border border-neutral-200 p-6 text-center dark:border-neutral-800">
+        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-600/10">
+         
+                <UserRound  className='mb-4 w-20 h-20'/>
+        </div>
+        <h3 className="text-lg font-bold uppercase tracking-wide text-neutral-900 dark:text-white">
+            
+            First Time Renter
+        </h3>
+        <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
+            If this is your first time booking with us
+        </p>
+        <button className="mt-6 w-full rounded-md bg-neutral-800 py-3 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-neutral-700">
+            How to Book a Ride
+        </button>
+    </div>
 
     
-            <div className="flex flex-col items-center rounded-xl border border-neutral-200 p-6 text-center dark:border-neutral-800">
-                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-500/10">
-                    
-                    
-                </div>
-                <h3 className="text-lg font-bold uppercase tracking-wide text-neutral-900 dark:text-white">
-                    New Vehicles
-                </h3>
-                <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
-                    See the newest vans added to our fleet
-                </p>
-                <button className="mt-6 w-full rounded-md bg-neutral-800 py-3 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-neutral-700">
-                    Search Our Fleet
-                </button>
-            </div>
+    <div className="flex flex-col items-center rounded-xl border border-neutral-200 p-6 text-center dark:border-neutral-800">
+        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-500/10">
+           
+           <CarTaxiFront className='mb-4 w-20 h-20' />
+        </div>
+        <h3 className="text-lg font-bold uppercase tracking-wide text-neutral-900 dark:text-white">
+            New Vehicles
+        </h3>
+        <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
+            See the newest vans added to our fleet
+        </p>
+        <button className="mt-6 w-full rounded-md bg-neutral-800 py-3 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-neutral-700">
+            Search Our Fleet
+        </button>
+    </div>
 
 
-            <div className="flex flex-col items-center rounded-xl border border-neutral-200 p-6 text-center dark:border-neutral-800">
-                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-500/10">
-                
-                    
-                </div>
-                    <h3 className="text-lg font-bold uppercase tracking-wide text-neutral-900 dark:text-white">
-                        Book a Ride
-                    </h3>
-                    <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
-                        Reserve a van for your next trip, hassle-free
-                    </p>
-                    <button className="mt-6 w-full rounded-md bg-neutral-800 py-3 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-neutral-700">
-                        Find a Ride
-                    </button>
-                </div>
-            </div>
+    <div className="flex flex-col items-center rounded-xl border border-neutral-200 p-6 text-center dark:border-neutral-800">
+        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-500/10">
+           <Book className='mb-4 w-20 h-20' />
+            
+        </div>
+        <h3 className="text-lg font-bold uppercase tracking-wide text-neutral-900 dark:text-white">
+            Book a Ride
+        </h3>
+        <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
+            Reserve a van for your next trip, hassle-free
+        </p>
+        <button className="mt-6 w-full rounded-md bg-neutral-800 py-3 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-neutral-700">
+            Find a Ride
+        </button>
+    </div>
+    
+</div>
+
         </>
     );
 }
