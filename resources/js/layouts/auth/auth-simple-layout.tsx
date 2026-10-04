@@ -9,8 +9,16 @@ export default function AuthSimpleLayout({
     description,
 }: AuthLayoutProps) {
     return (
-        <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-background p-6 md:p-10">
-            <div className="w-full max-w-sm">
+            <div className="relative isolate flex min-h-svh flex-col items-center justify-center gap-6 bg-background p-6 md:p-10">
+        <div
+            aria-hidden
+            className="fixed -inset-8 -z-10 bg-cover bg-center blur-[10px]"
+            style={{
+                backgroundImage:
+                    "linear-gradient(90deg, rgba(13,23,20,.85), rgba(13,23,20,.55)), url('/background.jpg')",
+            }}
+        />
+        <div className="w-full max-w-sm rounded-xl bg-background/85 p-8 backdrop-blur">
                 <div className="flex flex-col gap-8">
                     <div className="flex flex-col items-center gap-4">
                         <Link
