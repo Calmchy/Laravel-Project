@@ -1,156 +1,94 @@
-import { Head, Link, router } from '@inertiajs/react';
-import { useEffect } from 'react';
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
-import { dashboard } from '@/routes';
-import { Search, ArrowRight, UserRound, CarTaxiFront, Book} from 'lucide-react';
+import { Head, Link } from '@inertiajs/react';
+import { BadgeCheck, CalendarCheck, Search } from 'lucide-react';
+import { fmtDateTime, StatusBadge } from '@/components/lux';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
-export default function Dashboard() {
-    
+type Props = {
+    id_status: 'pending' | 'approved' | 'rejected' | null;
+    awaiting_my_approval: number;
+    upcoming: { id: number; reference_no: string; status: string; route: string; departure_at: string }[];
+};
+
+const ID_COPY = {
+    none: { title: 'Verify your ID', text: 'Upload a valid ID to start booking rides.', cta: 'Upload ID' },
+    pending: { title: 'ID under review', text: 'An admin is checking your ID. This usually takes a short while.', cta: 'View status' },
+    approved: { title: 'ID verified', text: 'You can reserve seats on any ride.', cta: 'View status' },
+    rejected: { title: 'ID needs a new upload', text: 'Your last upload was not accepted. Please try again.', cta: 'Upload again' },
+} as const;
+
+export default function Dashboard({ id_status, awaiting_my_approval, upcoming }: Props) {
+    const idCopy = ID_COPY[id_status ?? 'none'];
+    const tile = 'transition hover:-translate-y-0.5 hover:shadow-lg';
+
     return (
-        <> 
+        <>
             <Head title="Dashboard" />
-            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-                <div className="relative min-h-[80vh] flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                    <img
-                        src="/background.jpg"
-                        alt="Van in the mountains"
-                        className="absolute inset-0 h-full w-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-black/30" />
+            <div className="mx-auto flex max-w-6xl flex-col gap-8 p-4 md:p-8">
+                <header>
+                    <p className="text-xs tracking-[0.3em] text-amber-500 uppercase">Welcome back</p>
+                    <h1 className="mt-1 font-serif text-4xl">Where to next?</h1>
+                </header>
 
-                    <div className="relative flex h-full flex-col">
-                        <nav className="flex items-center justify-between px-6 py-6 md:px-10">
-                            <div className="flex items-center gap-2 text-white">
-                                
-                              
-                            </div>
+                <div className="grid gap-4 md:grid-cols-3">
+                    <Link href="/identity" className="block">
+                        <Card className={tile}>
+                            <CardHeader>
+                                <BadgeCheck className={`size-7 ${id_status === 'approved' ? 'text-emerald-500' : 'text-amber-500'}`} />
+                                <CardTitle>{idCopy.title}</CardTitle>
+                                <CardDescription>{idCopy.text}</CardDescription>
+                            </CardHeader>
+                            <CardContent className="text-sm font-medium text-amber-600">{idCopy.cta} →</CardContent>
+                        </Card>
+                    </Link>
 
-                            <div className="hidden items-center rounded-full bg-white/10 px-3 py-2 backdrop-blur-sm md:flex">
-                                <input
-                                    type="text"
-                                    placeholder="Search"
-                                    className="w-32 bg-transparent text-sm text-white placeholder-white/70 outline-none"
-                                />
-                                <Search className="h-4 w-4 text-white" />
-                            </div>
-                        </nav>
+                    <Link href="/rides" className="block">
+                        <Card className={tile}>
+                            <CardHeader>
+                                <Search className="size-7 text-amber-500" />
+                                <CardTitle>Find a ride</CardTitle>
+                                <CardDescription>Search seats by origin, destination and date.</CardDescription>
+                            </CardHeader>
+                            <CardContent className="text-sm font-medium text-amber-600">Search rides →</CardContent>
+                        </Card>
+                    </Link>
 
-                        <div className="flex flex-1 flex-col items-center justify-center px-6 text-center">
-                            <h1 className="max-w-3xl text-3xl font-extrabold uppercase tracking-wide text-white sm:text-4xl md:text-5xl">
-                                Set Your Travel Destination
-                            </h1>
-                            <div  />
-
-                            {/* <div className="mt-10 flex w-full max-w-2xl flex-col gap-3 rounded-full bg-white/10 p-2 backdrop-blur-md sm:flex-row sm:items-center">
-                                <div className="flex-1 rounded-full px-6 py-3 text-left">
-                                    <p className="text-xs uppercase tracking-wide text-white/70">
-                                        Location
-                                    </p>
-                                    <input
-                                        type="text"
-                                        placeholder="Where from?"
-                                        className="w-full bg-transparent text-sm text-white placeholder-white/60 outline-none"
-                                    />
-                                </div>
-                                <div className="hidden h-8 w-px bg-white/30 sm:block" />
-                                <div className="flex-1 rounded-full px-6 py-3 text-left">
-                                    <p className="text-xs uppercase tracking-wide text-white/70">
-                                        Pick Up Date
-                                    </p>
-                                    <input
-                                        type="date"
-                                        className="w-full bg-transparent text-sm text-white outline-none [color-scheme:dark]"
-                                    />
-                                </div>
-                                <div className="hidden h-8 w-px bg-white/30 sm:block" />
-                                <div className="flex-1 rounded-full px-6 py-3 text-left">
-                                    <p className="text-xs uppercase tracking-wide text-white/70">
-                                        Return Date
-                                    </p>
-                                    <input
-                                        type="date"
-                                        className="w-full bg-transparent text-sm text-white outline-none [color-scheme:dark]"
-                                    />
-                                </div> 
-                            </div>*/}
-
-                            
-                                                        <Link
-                            href="/booking"
-                            className="mt-16 mb-10 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold tracking-wide text-neutral-900 uppercase"
-                        >
-                            BOOK NOW!
-                            <ArrowRight className="h-4 w-4" />
-                        </Link>
-                           
-                        </div>
-                    </div>
+                    <Link href="/bookings" className="block">
+                        <Card className={tile}>
+                            <CardHeader>
+                                <CalendarCheck className="size-7 text-amber-500" />
+                                <CardTitle>My bookings</CardTitle>
+                                <CardDescription>
+                                    {awaiting_my_approval > 0
+                                        ? `${awaiting_my_approval} passenger request${awaiting_my_approval > 1 ? 's' : ''} waiting for your approval.`
+                                        : 'Track reservations, reference numbers and reviews.'}
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent className="text-sm font-medium text-amber-600">Open bookings →</CardContent>
+                        </Card>
+                    </Link>
                 </div>
+
+                <section>
+                    <h2 className="mb-4 font-serif text-2xl">Your upcoming trips</h2>
+                    {upcoming.length ? (
+                        <div className="divide-y rounded-xl border">
+                            {upcoming.map((b) => (
+                                <Link key={b.id} href={`/bookings/${b.id}`} className="flex flex-wrap items-center justify-between gap-3 p-4 transition hover:bg-muted/50">
+                                    <div>
+                                        <p className="font-medium">{b.route}</p>
+                                        <p className="text-sm text-muted-foreground">{fmtDateTime(b.departure_at)} · {b.reference_no}</p>
+                                    </div>
+                                    <StatusBadge status={b.status} />
+                                </Link>
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="rounded-xl border p-8 text-center text-muted-foreground">
+                            No upcoming trips. <Link href="/rides" className="text-amber-600 underline">Find a ride</Link>
+                        </p>
+                    )}
+                </section>
             </div>
-            <div className="grid gap-6 rounded-xl border border-sidebar-border/70 bg-white p-6 dark:border-sidebar-border dark:bg-neutral-900 md:grid-cols-3">
-  
-    <div className="flex flex-col items-center rounded-xl border border-neutral-200 p-6 text-center dark:border-neutral-800">
-        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-600/10">
-         
-                <UserRound  className='mb-4 w-20 h-20'/>
-        </div>
-        <h3 className="text-lg font-bold uppercase tracking-wide text-neutral-900 dark:text-white">
-            
-            First Time Renter
-        </h3>
-        <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
-            If this is your first time booking with us
-        </p>
-        <button className="mt-6 w-full rounded-md bg-neutral-800 py-3 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-neutral-700">
-            How to Book a Ride
-        </button>
-    </div>
-
-    
-    <div className="flex flex-col items-center rounded-xl border border-neutral-200 p-6 text-center dark:border-neutral-800">
-        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-500/10">
-           
-           <CarTaxiFront className='mb-4 w-20 h-20' />
-        </div>
-        <h3 className="text-lg font-bold uppercase tracking-wide text-neutral-900 dark:text-white">
-            New Vehicles
-        </h3>
-        <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
-            See the newest vans added to our fleet
-        </p>
-        <button className="mt-6 w-full rounded-md bg-neutral-800 py-3 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-neutral-700">
-            Search Our Fleet
-        </button>
-    </div>
-
-
-    <div className="flex flex-col items-center rounded-xl border border-neutral-200 p-6 text-center dark:border-neutral-800">
-        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-500/10">
-           <Book className='mb-4 w-20 h-20' />
-            
-        </div>
-        <h3 className="text-lg font-bold uppercase tracking-wide text-neutral-900 dark:text-white">
-            Book a Ride
-        </h3>
-        <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
-            Reserve a van for your next trip, hassle-free
-        </p>
-        <button className="mt-6 w-full rounded-md bg-neutral-800 py-3 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-neutral-700">
-            Find a Ride
-        </button>
-    </div>
-    
-</div>
-
         </>
     );
 }
-
-Dashboard.layout = {
-    breadcrumbs: [
-        {
-            title: 'Dashboard',
-            href: dashboard(),
-        },
-    ],
-};

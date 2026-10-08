@@ -39,6 +39,16 @@ class Booking extends Model
     }
 
     /** Derived, not stored. */
+    /** Which side of this booking is the user on? 'passenger' | 'driver' | null. */
+    public function roleOf(User $user): ?string
+    {
+        return match (true) {
+            $this->passenger_id === $user->id => 'passenger',
+            $this->ride->vehicle->driver_id === $user->id => 'driver',
+            default => null,
+        };
+    }
+
     public function totalFare(): string
     {
         return number_format((float) $this->fare_per_seat * $this->seats_booked, 2, '.', '');
