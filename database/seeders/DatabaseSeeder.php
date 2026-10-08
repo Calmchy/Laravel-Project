@@ -31,5 +31,15 @@ class DatabaseSeeder extends Seeder
                 'email' => 'admin@ridenovaph.test',
             ]);
         }
+
+        if (env('ADMIN_EMAIL') && env('ADMIN_PASSWORD')) {
+            $admin = \App\Models\User::firstOrNew(['email' => env('ADMIN_EMAIL')]);
+            $admin->forceFill([
+                'name' => 'Administrator',
+                'password' => \Illuminate\Support\Facades\Hash::make(env('ADMIN_PASSWORD')),
+                'role_id' => \App\Models\Role::ADMIN,
+                'email_verified_at' => now(),
+            ])->save();
+        }
     }
 }
