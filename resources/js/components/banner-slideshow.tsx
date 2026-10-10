@@ -13,10 +13,10 @@ export type Banner = {
 // Shown only until an admin uploads real photos (Admin > Banners). Pure CSS gradients,
 // so the page never depends on remote images.
 const FALLBACK = [
-    { id: -1, title: 'Palawan', caption: 'Lagoons, limestone cliffs and the clearest water in the country.', link_url: '/rides', g: 'from-teal-900 via-cyan-800 to-slate-950' },
-    { id: -2, title: 'Siargao', caption: 'Island hopping, surf and sunsets at Cloud 9.', link_url: '/rides', g: 'from-sky-900 via-blue-800 to-slate-950' },
-    { id: -3, title: 'Banaue', caption: 'The Rice Terraces: 2,000 years of mountain farming.', link_url: '/rides', g: 'from-emerald-900 via-green-800 to-slate-950' },
-    { id: -4, title: 'Bohol', caption: 'Chocolate Hills, tarsiers and quiet white beaches.', link_url: '/rides', g: 'from-amber-900 via-yellow-800 to-slate-950' },
+    { id: -1, title: 'Palawan', caption: 'Lagoons, limestone cliffs and the clearest water in the country.', link_url: '/rides', g: 'from-teal-brand via-deep-2 to-deep' },
+    { id: -2, title: 'Siargao', caption: 'Island hopping, surf and sunsets at Cloud 9.', link_url: '/rides', g: 'from-coral/80 via-deep-2 to-deep' },
+    { id: -3, title: 'Banaue', caption: 'The Rice Terraces: 2,000 years of mountain farming.', link_url: '/rides', g: 'from-seafoam/70 via-teal-brand to-deep' },
+    { id: -4, title: 'Bohol', caption: 'Chocolate Hills, tarsiers and quiet white beaches.', link_url: '/rides', g: 'from-sand/80 via-teal-brand to-deep' },
 ];
 
 export default function BannerSlideshow({ banners }: { banners: Banner[] }) {
@@ -43,7 +43,7 @@ export default function BannerSlideshow({ banners }: { banners: Banner[] }) {
 
     return (
         <section
-            className="relative h-[78vh] min-h-[560px] w-full overflow-hidden bg-slate-950"
+            className="relative h-[78vh] min-h-[560px] w-full overflow-hidden bg-deep"
             onMouseEnter={() => setPaused(true)}
             onMouseLeave={() => setPaused(false)}
             onFocus={() => setPaused(true)}
@@ -62,16 +62,16 @@ export default function BannerSlideshow({ banners }: { banners: Banner[] }) {
                     ) : (
                         <div className={`h-full w-full bg-gradient-to-br ${s.g}`} />
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-slate-950/50" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-deep via-deep/30 to-deep/50" />
                     <div className="absolute bottom-40 left-6 max-w-xl md:left-16">
-                        <p className="text-xs tracking-[0.3em] text-amber-300 uppercase">Discover the Philippines</p>
+                        <p className="text-xs tracking-[0.3em] text-sand uppercase">Discover the Philippines</p>
                         <h2 className="mt-3 font-serif text-5xl text-white md:text-7xl">{s.title}</h2>
                         {s.caption && <p className="mt-4 text-lg text-white/80">{s.caption}</p>}
                         {s.link_url && (
                             <Link
                                 href={s.link_url}
                                 tabIndex={idx === i ? 0 : -1}
-                                className="mt-6 inline-block rounded-full border border-amber-300/60 px-6 py-2.5 text-sm text-amber-200 transition hover:bg-amber-300 hover:text-slate-950"
+                                className="mt-6 inline-block rounded-full border border-sand/60 px-6 py-2.5 text-sm text-peach transition hover:bg-sand hover:text-deep"
                             >
                                 See rides →
                             </Link>
@@ -107,7 +107,7 @@ export default function BannerSlideshow({ banners }: { banners: Banner[] }) {
                                 aria-selected={idx === i}
                                 aria-label={`Show slide ${idx + 1}`}
                                 onClick={() => setI(idx)}
-                                className={`h-1.5 rounded-full transition-all ${idx === i ? 'w-10 bg-amber-300' : 'w-4 bg-white/40 hover:bg-white/70'}`}
+                                className={`h-1.5 rounded-full transition-all ${idx === i ? 'w-10 bg-sand' : 'w-4 bg-white/40 hover:bg-white/70'}`}
                             />
                         ))}
                     </div>

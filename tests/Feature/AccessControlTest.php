@@ -34,10 +34,11 @@ test('passengers cannot decide on ID documents or manage banners', function () {
 
 test('public pages load for guests', function () {
     $this->get('/')->assertOk();
-    $this->get('/rides')->assertOk();
+    $this->get('/rides')->assertRedirect(route('bookings.index', ['tab' => 'find']));
 });
 
 test('booking actions require a signed-in user', function () {
     $this->post('/rides/1/book', ['seats' => 1])->assertRedirect(route('login'));
     $this->get('/bookings')->assertRedirect(route('login'));
+    $this->get('/rides/1/book')->assertRedirect(route('login'));
 });

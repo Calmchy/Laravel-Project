@@ -16,7 +16,7 @@ createInertiaApp({
                 return null; // public pages bring their own header
             case name.startsWith('auth/'):
                 return AuthLayout;
-            case name.startsWith('settings/'):
+            case name.startsWith('settings/') || name.startsWith('identity/'):
                 return [AppLayout, SettingsLayout];
             default:
                 return AppLayout;

@@ -59,9 +59,9 @@ export default function Admin({ stats, bookings, id_queue, banners }: Props) {
                     {TABS.map((t) => (
                         <button
                             key={t} role="tab" aria-selected={tab === t} onClick={() => setTab(t)}
-                            className={`-mb-px border-b-2 px-4 py-2 text-sm transition ${tab === t ? 'border-amber-500 font-semibold' : 'border-transparent text-muted-foreground hover:text-foreground'}`}
+                            className={`-mb-px border-b-2 px-4 py-2 text-sm transition ${tab === t ? 'border-coral font-semibold' : 'border-transparent text-muted-foreground hover:text-foreground'}`}
                         >
-                            {t}{t === 'ID verification' && id_queue.length > 0 && <span className="ml-2 rounded-full bg-amber-500 px-2 py-0.5 text-xs text-black">{id_queue.length}</span>}
+                            {t}{t === 'ID verification' && id_queue.length > 0 && <span className="ml-2 rounded-full bg-coral px-2 py-0.5 text-xs text-black">{id_queue.length}</span>}
                         </button>
                     ))}
                 </div>

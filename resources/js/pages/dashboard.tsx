@@ -1,90 +1,79 @@
 import { Head, Link } from '@inertiajs/react';
-import { BadgeCheck, CalendarCheck, Search } from 'lucide-react';
+import { CalendarCheck, CheckCircle2, Clock, Ticket } from 'lucide-react';
+import DashboardSlideshow from '@/components/dashboard-slideshow';
+import type { Slide } from '@/components/dashboard-slideshow';
 import { fmtDateTime, StatusBadge } from '@/components/lux';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 type Props = {
-    id_status: 'pending' | 'approved' | 'rejected' | null;
+    slides: Slide[];
+    stats: { active: number; completed: number; total: number };
     awaiting_my_approval: number;
     upcoming: { id: number; reference_no: string; status: string; route: string; departure_at: string }[];
 };
 
-const ID_COPY = {
-    none: { title: 'Verify your ID', text: 'Upload a valid ID to start booking rides.', cta: 'Upload ID' },
-    pending: { title: 'ID under review', text: 'An admin is checking your ID. This usually takes a short while.', cta: 'View status' },
-    approved: { title: 'ID verified', text: 'You can reserve seats on any ride.', cta: 'View status' },
-    rejected: { title: 'ID needs a new upload', text: 'Your last upload was not accepted. Please try again.', cta: 'Upload again' },
-} as const;
+/** Small number tile; the whole tile is a link to the bookings hub. */
+function Stat({ icon: Icon, label, value, tone }: { icon: typeof Ticket; label: string; value: number; tone: string }) {
+    return (
+        <Link href="/bookings?tab=mine" className="group rounded-2xl border bg-card p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+            <span className={`flex size-11 items-center justify-center rounded-xl ${tone}`}><Icon className="size-5" /></span>
+            <p className="mt-4 font-serif text-4xl">{value}</p>
+            <p className="text-sm text-muted-foreground">{label}</p>
+        </Link>
+    );
+}
 
-export default function Dashboard({ id_status, awaiting_my_approval, upcoming }: Props) {
-    const idCopy = ID_COPY[id_status ?? 'none'];
-    const tile = 'transition hover:-translate-y-0.5 hover:shadow-lg';
-
+/**
+ * Dashboard = announcements slideshow on top, your numbers, what needs attention,
+ * and your next trips. ID verification lives on the profile pages only.
+ */
+export default function Dashboard({ slides, stats, awaiting_my_approval, upcoming }: Props) {
     return (
         <>
             <Head title="Dashboard" />
             <div className="mx-auto flex max-w-6xl flex-col gap-8 p-4 md:p-8">
+                <DashboardSlideshow slides={slides} />
+
                 <header>
-                    <p className="text-xs tracking-[0.3em] text-amber-500 uppercase">Welcome back</p>
+                    <p className="text-xs tracking-[0.3em] text-coral uppercase">Welcome back</p>
                     <h1 className="mt-1 font-serif text-4xl">Where to next?</h1>
                 </header>
 
-                <div className="grid gap-4 md:grid-cols-3">
-                    <Link href="/identity" className="block">
-                        <Card className={tile}>
-                            <CardHeader>
-                                <BadgeCheck className={`size-7 ${id_status === 'approved' ? 'text-emerald-500' : 'text-amber-500'}`} />
-                                <CardTitle>{idCopy.title}</CardTitle>
-                                <CardDescription>{idCopy.text}</CardDescription>
-                            </CardHeader>
-                            <CardContent className="text-sm font-medium text-amber-600">{idCopy.cta} →</CardContent>
-                        </Card>
-                    </Link>
-
-                    <Link href="/rides" className="block">
-                        <Card className={tile}>
-                            <CardHeader>
-                                <Search className="size-7 text-amber-500" />
-                                <CardTitle>Find a ride</CardTitle>
-                                <CardDescription>Search seats by origin, destination and date.</CardDescription>
-                            </CardHeader>
-                            <CardContent className="text-sm font-medium text-amber-600">Search rides →</CardContent>
-                        </Card>
-                    </Link>
-
-                    <Link href="/bookings" className="block">
-                        <Card className={tile}>
-                            <CardHeader>
-                                <CalendarCheck className="size-7 text-amber-500" />
-                                <CardTitle>My bookings</CardTitle>
-                                <CardDescription>
-                                    {awaiting_my_approval > 0
-                                        ? `${awaiting_my_approval} passenger request${awaiting_my_approval > 1 ? 's' : ''} waiting for your approval.`
-                                        : 'Track reservations, reference numbers and reviews.'}
-                                </CardDescription>
-                            </CardHeader>
-                            <CardContent className="text-sm font-medium text-amber-600">Open bookings →</CardContent>
-                        </Card>
-                    </Link>
+                <div className="grid gap-4 sm:grid-cols-3">
+                    <Stat icon={Clock} label="Active bookings" value={stats.active} tone="bg-seafoam text-deep" />
+                    <Stat icon={CheckCircle2} label="Trips completed" value={stats.completed} tone="bg-peach text-deep" />
+                    <Stat icon={Ticket} label="All bookings" value={stats.total} tone="bg-teal-brand/15 text-teal-brand" />
                 </div>
 
+                {awaiting_my_approval > 0 && (
+                    <Link href="/bookings?tab=mine" className="flex items-center gap-4 rounded-2xl border border-coral/40 bg-coral/10 p-5 transition hover:bg-coral/15">
+                        <CalendarCheck className="size-7 text-coral" />
+                        <div>
+                            <p className="font-medium">{awaiting_my_approval} passenger request{awaiting_my_approval > 1 ? 's' : ''} waiting for your approval</p>
+                            <p className="text-sm text-muted-foreground">Open Bookings to approve or decline →</p>
+                        </div>
+                    </Link>
+                )}
+
                 <section>
-                    <h2 className="mb-4 font-serif text-2xl">Your upcoming trips</h2>
+                    <div className="mb-4 flex items-end justify-between">
+                        <h2 className="font-serif text-2xl">Your upcoming trips</h2>
+                        <Link href="/bookings?tab=find" className="text-sm font-medium text-teal-brand hover:underline">Find a ride →</Link>
+                    </div>
                     {upcoming.length ? (
-                        <div className="divide-y rounded-xl border">
+                        <div className="divide-y rounded-xl border bg-card">
                             {upcoming.map((b) => (
-                                <Link key={b.id} href={`/bookings/${b.id}`} className="flex flex-wrap items-center justify-between gap-3 p-4 transition hover:bg-muted/50">
+                                <Link key={b.id} href={`/bookings/${b.id}`} className="flex flex-wrap items-center justify-between gap-3 p-4 transition hover:bg-muted/60">
                                     <div>
                                         <p className="font-medium">{b.route}</p>
-                                        <p className="text-sm text-muted-foreground">{fmtDateTime(b.departure_at)} · {b.reference_no}</p>
+                                        <p className="text-sm text-muted-foreground">{fmtDateTime(b.departure_at)} · <span className="font-mono text-teal-brand">{b.reference_no}</span></p>
                                     </div>
                                     <StatusBadge status={b.status} />
                                 </Link>
                             ))}
                         </div>
                     ) : (
-                        <p className="rounded-xl border p-8 text-center text-muted-foreground">
-                            No upcoming trips. <Link href="/rides" className="text-amber-600 underline">Find a ride</Link>
+                        <p className="rounded-xl border bg-card p-8 text-center text-muted-foreground">
+                            No upcoming trips. <Link href="/bookings?tab=find" className="font-medium text-teal-brand underline">Find a ride</Link>
                         </p>
                     )}
                 </section>
