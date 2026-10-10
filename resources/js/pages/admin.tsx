@@ -1,250 +1,164 @@
-import { Head, Link } from '@inertiajs/react';
-import {
-    ArrowLeft,
-    CalendarCheck,
-    Car,
-    LayoutDashboard,
-    Search,
-    Settings,
-    Users,
-} from 'lucide-react';
+import { Head, router, useForm } from '@inertiajs/react';
 import { useMemo, useState } from 'react';
+import InputError from '@/components/input-error';
+import { fmtDateTime, StatusBadge } from '@/components/lux';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-type Status = 'Pending' | 'Confirmed' | 'Completed' | 'Cancelled';
-
-type Booking = {
-    ref: string;
-    client: string;
-    mobile: string;
-    pickup: string;
-    destination: string;
-    pickupDate: string;
-    returnDate: string;
-    passengers: number;
-    payment: string;
-    status: Status;
+type Props = {
+    stats: { bookings: number; pending: number; confirmed: number; completed: number };
+    bookings: { id: number; reference_no: string; passenger: string; phone: string | null; route: string; departure_at: string; seats: number; status: string }[];
+    id_queue: { id: number; name: string; email: string; id_type: string; has_back: boolean; submitted_at: string }[];
+    banners: { id: number; title: string; caption: string | null; link_url: string | null; is_active: boolean; image_url: string }[];
 };
 
-// MOCK DATA lang ito para sa design. Papalitan ng totoong data galing sa database.
-const bookings: Booking[] = [
-    { ref: 'RN-1001', client: 'Maria Santos', mobile: '0917 123 4567', pickup: 'Davao City', destination: 'Samal Island', pickupDate: 'Oct 10, 2026', returnDate: 'Oct 12, 2026', passengers: 8, payment: 'GCash', status: 'Pending' },
-    { ref: 'RN-1002', client: 'Juan Dela Cruz', mobile: '0928 555 0192', pickup: 'Tagum City', destination: 'Davao City', pickupDate: 'Oct 11, 2026', returnDate: 'Oct 11, 2026', passengers: 5, payment: 'Cash', status: 'Confirmed' },
-    { ref: 'RN-1003', client: 'Ana Reyes', mobile: '0935 220 8841', pickup: 'Mabini', destination: 'Mati City', pickupDate: 'Oct 13, 2026', returnDate: 'Oct 14, 2026', passengers: 10, payment: 'Bank transfer', status: 'Confirmed' },
-    { ref: 'RN-1004', client: 'Carlo Mendoza', mobile: '0906 778 3310', pickup: 'Davao City', destination: 'Digos City', pickupDate: 'Oct 02, 2026', returnDate: 'Oct 02, 2026', passengers: 4, payment: 'Cash', status: 'Completed' },
-    { ref: 'RN-1005', client: 'Liza Gomez', mobile: '0999 410 7765', pickup: 'Panabo', destination: 'Davao Airport', pickupDate: 'Oct 15, 2026', returnDate: 'Oct 15, 2026', passengers: 3, payment: 'GCash', status: 'Pending' },
-    { ref: 'RN-1006', client: 'Paolo Villanueva', mobile: '0917 904 1128', pickup: 'Davao City', destination: 'Cagayan de Oro', pickupDate: 'Oct 18, 2026', returnDate: 'Oct 20, 2026', passengers: 12, payment: 'Bank transfer', status: 'Cancelled' },
-    { ref: 'RN-1007', client: 'Grace Tan', mobile: '0945 332 6709', pickup: 'Mati City', destination: 'Davao City', pickupDate: 'Sep 28, 2026', returnDate: 'Sep 29, 2026', passengers: 6, payment: 'Cash', status: 'Completed' },
-    { ref: 'RN-1008', client: 'Miguel Torres', mobile: '0927 118 5543', pickup: 'Digos City', destination: 'Davao City', pickupDate: 'Oct 21, 2026', returnDate: 'Oct 22, 2026', passengers: 7, payment: 'GCash', status: 'Pending' },
-];
+const TABS = ['Bookings', 'ID verification', 'Banners'] as const;
+const FILTERS = ['all', 'pending', 'approved', 'confirmed', 'completed', 'cancelled'];
 
-const statusStyle: Record<Status, string> = {
-    Pending: 'bg-amber-400/20 text-amber-200 ring-amber-300/40',
-    Confirmed: 'bg-sky-400/20 text-sky-200 ring-sky-300/40',
-    Completed: 'bg-emerald-400/20 text-emerald-200 ring-emerald-300/40',
-    Cancelled: 'bg-rose-400/20 text-rose-200 ring-rose-300/40',
-};
-
-const filters: ('All' | Status)[] = ['All', 'Pending', 'Confirmed', 'Completed', 'Cancelled'];
-
-const nav = [
-    { label: 'Overview', icon: LayoutDashboard },
-    { label: 'Bookings', icon: CalendarCheck },
-    { label: 'Vehicles', icon: Car },
-    { label: 'Clients', icon: Users },
-    { label: 'Settings', icon: Settings },
-];
-
-export default function Admin() {
-    const [filter, setFilter] = useState<'All' | Status>('All');
+export default function Admin({ stats, bookings, id_queue, banners }: Props) {
+    const [tab, setTab] = useState<(typeof TABS)[number]>('Bookings');
+    const [filter, setFilter] = useState('all');
     const [search, setSearch] = useState('');
-
-    const counts = useMemo(
-        () => ({
-            total: bookings.length,
-            Pending: bookings.filter((b) => b.status === 'Pending').length,
-            Confirmed: bookings.filter((b) => b.status === 'Confirmed').length,
-            Completed: bookings.filter((b) => b.status === 'Completed').length,
-        }),
-        [],
-    );
+    const [remarks, setRemarks] = useState<Record<number, string>>({});
 
     const rows = useMemo(() => {
         const q = search.trim().toLowerCase();
 
         return bookings.filter(
             (b) =>
-                (filter === 'All' || b.status === filter) &&
-                (!q ||
-                    [b.ref, b.client, b.pickup, b.destination].some((v) =>
-                        v.toLowerCase().includes(q),
-                    )),
+                (filter === 'all' || b.status === filter) &&
+                (!q || [b.reference_no, b.passenger, b.route].some((v) => v.toLowerCase().includes(q))),
         );
-    }, [filter, search]);
+    }, [bookings, filter, search]);
 
-    const stats = [
-        { label: 'Total bookings', value: counts.total },
-        { label: 'Pending', value: counts.Pending },
-        { label: 'Confirmed', value: counts.Confirmed },
-        { label: 'Completed', value: counts.Completed },
-    ];
+    const decide = (id: number, decision: 'approved' | 'rejected') =>
+        router.patch(`/admin/identity-documents/${id}`, { decision, remarks: remarks[id] ?? '' }, { preserveScroll: true });
+
+    const banner = useForm<{ title: string; caption: string; link_url: string; image: File | null }>({
+        title: '', caption: '', link_url: '', image: null,
+    });
+
+    const input = 'w-full rounded-md border bg-background px-3 py-2 text-sm';
 
     return (
         <>
             <Head title="Admin" />
+            <div className="mx-auto flex max-w-7xl flex-col gap-6 p-4 md:p-8">
+                <h1 className="font-serif text-4xl">Admin</h1>
 
-            <div className="relative isolate min-h-svh text-white">
-                <div
-                    aria-hidden
-                    className="fixed -inset-8 -z-10 bg-cover bg-center blur-[12px]"
-                    style={{
-                        backgroundImage:
-                            "linear-gradient(180deg, rgba(10,14,13,.7), rgba(10,14,13,.9)), url('/background.jpg')",
-                    }}
-                />
-
-                <div className="mx-auto flex max-w-7xl flex-col gap-6 p-4 md:flex-row md:p-6">
-                    {/* Sidebar */}
-                    <aside className="flex shrink-0 flex-col gap-6 rounded-3xl border border-white/15 bg-white/10 p-5 backdrop-blur-md md:sticky md:top-6 md:h-[calc(100svh-3rem)] md:w-60">
-                        <div className="flex items-center gap-3">
-                            <img src="/carpull1.png" alt="" className="size-10 object-contain" />
-                            <div>
-                                <p className="font-semibold leading-tight">Ride Nova PH</p>
-                                <p className="text-xs text-white/60">Admin panel</p>
-                            </div>
-                        </div>
-
-                        <nav className="flex gap-2 overflow-x-auto md:flex-col md:overflow-visible">
-                            {nav.map(({ label, icon: Icon }) => (
-                                <button
-                                    key={label}
-                                    type="button"
-                                    className={`flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm whitespace-nowrap transition ${
-                                        label === 'Bookings'
-                                            ? 'bg-white text-black font-semibold'
-                                            : 'text-white/75 hover:bg-white/10 hover:text-white'
-                                    }`}
-                                >
-                                    <Icon className="size-4" />
-                                    {label}
-                                </button>
-                            ))}
-                        </nav>
-
-                        <Link
-                            href="/dashboard"
-                            className="mt-auto inline-flex items-center gap-2 text-sm text-white/70 hover:text-white"
-                        >
-                            <ArrowLeft className="size-4" />
-                            Back to site
-                        </Link>
-                    </aside>
-
-                    {/* Main */}
-                    <main className="flex min-w-0 flex-1 flex-col gap-6">
-                        <header>
-                            <h1 className="text-3xl font-bold tracking-tight md:text-4xl">Bookings</h1>
-                            <p className="mt-1 text-white/70">
-                                Monitor everyone who booked a ride. Sample data lang muna ito.
-                            </p>
-                        </header>
-
-                        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-                            {stats.map((s) => (
-                                <div
-                                    key={s.label}
-                                    className="rounded-2xl border border-white/15 bg-white/10 p-5 backdrop-blur-md"
-                                >
-                                    <p className="text-sm text-white/65">{s.label}</p>
-                                    <p className="mt-2 text-4xl font-bold">{s.value}</p>
-                                </div>
-                            ))}
-                        </div>
-
-                        <section className="rounded-3xl border border-white/15 bg-white/10 p-4 backdrop-blur-md md:p-6">
-                            <div className="mb-5 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                                <div className="flex flex-wrap gap-2">
-                                    {filters.map((f) => (
-                                        <button
-                                            key={f}
-                                            type="button"
-                                            onClick={() => setFilter(f)}
-                                            className={`rounded-full px-4 py-1.5 text-sm transition ${
-                                                filter === f
-                                                    ? 'bg-white font-semibold text-black'
-                                                    : 'border border-white/25 text-white/80 hover:bg-white/10'
-                                            }`}
-                                        >
-                                            {f}
-                                        </button>
-                                    ))}
-                                </div>
-
-                                <label className="flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 lg:w-72">
-                                    <Search className="size-4 text-white/60" />
-                                    <input
-                                        value={search}
-                                        onChange={(e) => setSearch(e.target.value)}
-                                        placeholder="Search name, ref, place"
-                                        className="w-full bg-transparent text-sm text-white outline-none placeholder:text-white/50"
-                                    />
-                                </label>
-                            </div>
-
-                            <div className="overflow-x-auto">
-                                <table className="w-full min-w-[820px] text-left text-sm">
-                                    <thead className="text-xs tracking-wide text-white/60 uppercase">
-                                        <tr className="border-b border-white/15">
-                                            {['Ref', 'Client', 'Trip', 'Dates', 'Pax', 'Payment', 'Status'].map((h) => (
-                                                <th key={h} className="px-3 py-3 font-medium">
-                                                    {h}
-                                                </th>
-                                            ))}
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-white/10">
-                                        {rows.map((b) => (
-                                            <tr key={b.ref} className="hover:bg-white/5">
-                                                <td className="px-3 py-4 font-medium">{b.ref}</td>
-                                                <td className="px-3 py-4">
-                                                    <p className="font-medium">{b.client}</p>
-                                                    <p className="text-xs text-white/60">{b.mobile}</p>
-                                                </td>
-                                                <td className="px-3 py-4">
-                                                    {b.pickup}
-                                                    <span className="mx-1.5 text-white/50">to</span>
-                                                    {b.destination}
-                                                </td>
-                                                <td className="px-3 py-4 text-white/80">
-                                                    {b.pickupDate}
-                                                    {b.returnDate !== b.pickupDate && (
-                                                        <span className="block text-xs text-white/55">
-                                                            Return {b.returnDate}
-                                                        </span>
-                                                    )}
-                                                </td>
-                                                <td className="px-3 py-4">{b.passengers}</td>
-                                                <td className="px-3 py-4 text-white/80">{b.payment}</td>
-                                                <td className="px-3 py-4">
-                                                    <span
-                                                        className={`inline-block rounded-full px-3 py-1 text-xs font-medium ring-1 ${statusStyle[b.status]}`}
-                                                    >
-                                                        {b.status}
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-
-                                {rows.length === 0 && (
-                                    <p className="py-10 text-center text-white/60">
-                                        Walang nahanap na booking.
-                                    </p>
-                                )}
-                            </div>
-                        </section>
-                    </main>
+                <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+                    {([['Total bookings', stats.bookings], ['Pending', stats.pending], ['Confirmed', stats.confirmed], ['Completed', stats.completed]] as const).map(([label, n]) => (
+                        <Card key={label}>
+                            <CardHeader className="pb-2"><CardTitle className="text-sm font-normal text-muted-foreground">{label}</CardTitle></CardHeader>
+                            <CardContent className="text-4xl font-bold">{n}</CardContent>
+                        </Card>
+                    ))}
                 </div>
+
+                <div className="flex gap-2 border-b" role="tablist">
+                    {TABS.map((t) => (
+                        <button
+                            key={t} role="tab" aria-selected={tab === t} onClick={() => setTab(t)}
+                            className={`-mb-px border-b-2 px-4 py-2 text-sm transition ${tab === t ? 'border-coral font-semibold' : 'border-transparent text-muted-foreground hover:text-foreground'}`}
+                        >
+                            {t}{t === 'ID verification' && id_queue.length > 0 && <span className="ml-2 rounded-full bg-coral px-2 py-0.5 text-xs text-black">{id_queue.length}</span>}
+                        </button>
+                    ))}
+                </div>
+
+                {tab === 'Bookings' && (
+                    <section className="space-y-4">
+                        <div className="flex flex-wrap items-center justify-between gap-3">
+                            <div className="flex flex-wrap gap-2">
+                                {FILTERS.map((f) => (
+                                    <button key={f} onClick={() => setFilter(f)}
+                                        className={`rounded-full px-4 py-1.5 text-sm capitalize ${filter === f ? 'bg-foreground text-background' : 'border hover:bg-muted'}`}>{f}</button>
+                                ))}
+                            </div>
+                            <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search reference, name, route" className={`${input} lg:w-72`} />
+                        </div>
+                        <div className="overflow-x-auto rounded-xl border">
+                            <table className="w-full min-w-[760px] text-left text-sm">
+                                <thead className="bg-muted/50 text-xs tracking-wide text-muted-foreground uppercase">
+                                    <tr>{['Reference', 'Passenger', 'Route', 'Departure', 'Seats', 'Status'].map((h) => <th key={h} className="px-4 py-3 font-medium">{h}</th>)}</tr>
+                                </thead>
+                                <tbody className="divide-y">
+                                    {rows.map((b) => (
+                                        <tr key={b.id} className="hover:bg-muted/30">
+                                            <td className="px-4 py-3 font-mono text-xs">{b.reference_no}</td>
+                                            <td className="px-4 py-3">{b.passenger}<span className="block text-xs text-muted-foreground">{b.phone}</span></td>
+                                            <td className="px-4 py-3">{b.route}</td>
+                                            <td className="px-4 py-3">{fmtDateTime(b.departure_at)}</td>
+                                            <td className="px-4 py-3">{b.seats}</td>
+                                            <td className="px-4 py-3"><StatusBadge status={b.status} /></td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                            {rows.length === 0 && <p className="p-10 text-center text-muted-foreground">No bookings found.</p>}
+                        </div>
+                    </section>
+                )}
+
+                {tab === 'ID verification' && (
+                    <section className="space-y-4">
+                        {id_queue.length === 0 && <p className="rounded-xl border p-10 text-center text-muted-foreground">Nothing waiting for review.</p>}
+                        {id_queue.map((d) => (
+                            <article key={d.id} className="grid gap-4 rounded-xl border p-4 md:grid-cols-[1fr_1fr_280px]">
+                                <a href={`/admin/identity-documents/${d.id}/front`} target="_blank" rel="noreferrer">
+                                    <img src={`/admin/identity-documents/${d.id}/front`} alt={`Front of ${d.name}'s ID`} className="h-48 w-full rounded-lg border object-contain" />
+                                </a>
+                                {d.has_back ? (
+                                    <a href={`/admin/identity-documents/${d.id}/back`} target="_blank" rel="noreferrer">
+                                        <img src={`/admin/identity-documents/${d.id}/back`} alt={`Back of ${d.name}'s ID`} className="h-48 w-full rounded-lg border object-contain" />
+                                    </a>
+                                ) : <div className="flex h-48 items-center justify-center rounded-lg border text-sm text-muted-foreground">No back image</div>}
+                                <div className="space-y-3">
+                                    <div>
+                                        <p className="font-medium">{d.name}</p>
+                                        <p className="text-sm text-muted-foreground">{d.email}</p>
+                                        <p className="text-sm">{d.id_type} · {fmtDateTime(d.submitted_at)}</p>
+                                    </div>
+                                    <input value={remarks[d.id] ?? ''} maxLength={255} onChange={(e) => setRemarks({ ...remarks, [d.id]: e.target.value })} placeholder="Remark (shown if rejected)" className={input} />
+                                    <div className="flex gap-2">
+                                        <Button onClick={() => decide(d.id, 'approved')}>Approve</Button>
+                                        <Button variant="destructive" onClick={() => decide(d.id, 'rejected')}>Reject</Button>
+                                    </div>
+                                </div>
+                            </article>
+                        ))}
+                    </section>
+                )}
+
+                {tab === 'Banners' && (
+                    <section className="grid gap-8 lg:grid-cols-[1fr_360px]">
+                        <div className="space-y-3">
+                            {banners.length === 0 && <p className="rounded-xl border p-10 text-center text-muted-foreground">No banners yet. The homepage shows default destination slides until you add some.</p>}
+                            {banners.map((b) => (
+                                <div key={b.id} className="flex items-center gap-4 rounded-xl border p-3">
+                                    <img src={b.image_url} alt="" className="h-16 w-28 rounded-md object-cover" />
+                                    <div className="min-w-0 flex-1">
+                                        <p className="truncate font-medium">{b.title}</p>
+                                        <p className="truncate text-xs text-muted-foreground">{b.caption}</p>
+                                    </div>
+                                    <Button variant="outline" size="sm" onClick={() => router.patch(`/admin/banners/${b.id}`, {}, { preserveScroll: true })}>{b.is_active ? 'Hide' : 'Show'}</Button>
+                                    <Button variant="destructive" size="sm" onClick={() => confirm('Delete this banner?') && router.delete(`/admin/banners/${b.id}`, { preserveScroll: true })}>Delete</Button>
+                                </div>
+                            ))}
+                        </div>
+                        <form onSubmit={(e) => { e.preventDefault(); banner.post('/admin/banners', { forceFormData: true, onSuccess: () => banner.reset() }); }} className="h-fit space-y-3 rounded-xl border p-5">
+                            <h2 className="font-serif text-xl">Add a slide</h2>
+                            <input required placeholder="Title (e.g. Palawan)" value={banner.data.title} onChange={(e) => banner.setData('title', e.target.value)} className={input} />
+                            <InputError message={banner.errors.title} />
+                            <input placeholder="Caption" value={banner.data.caption} onChange={(e) => banner.setData('caption', e.target.value)} className={input} />
+                            <input placeholder="Link, e.g. /rides?destination=3" value={banner.data.link_url} onChange={(e) => banner.setData('link_url', e.target.value)} className={input} />
+                            <InputError message={banner.errors.link_url} />
+                            <input required type="file" accept="image/jpeg,image/png,image/webp" onChange={(e) => banner.setData('image', e.target.files?.[0] ?? null)} className={input} />
+                            <InputError message={banner.errors.image} />
+                            <Button type="submit" disabled={banner.processing} className="w-full">Add banner</Button>
+                        </form>
+                    </section>
+                )}
             </div>
         </>
     );

@@ -12,11 +12,11 @@ createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
     layout: (name) => {
         switch (true) {
-            case name === 'welcome':
-                return null;
+            case name === 'welcome' || name.startsWith('rides/'):
+                return null; // public pages bring their own header
             case name.startsWith('auth/'):
                 return AuthLayout;
-            case name.startsWith('settings/'):
+            case name.startsWith('settings/') || name.startsWith('identity/'):
                 return [AppLayout, SettingsLayout];
             default:
                 return AppLayout;
