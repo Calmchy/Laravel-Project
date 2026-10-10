@@ -1,5 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
-import { BadgeCheck, CalendarCheck, Info, LayoutGrid, Menu, Search, ShieldCheck } from 'lucide-react';
+import { CalendarCheck, Info, LayoutGrid, Menu, Search, ShieldCheck } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import AppLogoIcon from '@/components/app-logo-icon';
 import { Breadcrumbs } from '@/components/breadcrumbs';
@@ -32,8 +32,8 @@ import { UserMenuContent } from '@/components/user-menu-content';
 import { useCurrentUrl } from '@/hooks/use-current-url';
 import { useInitials } from '@/hooks/use-initials';
 import { cn, toUrl } from '@/lib/utils';
-import { dashboard, about } from '@/routes';
 import type { BreadcrumbItem, NavItem } from '@/types';
+import { dashboard, about } from '@/routes';
 
 type Props = {
     breadcrumbs?: BreadcrumbItem[];
@@ -41,9 +41,8 @@ type Props = {
 
 const mainNavItems: NavItem[] = [
     { title: 'Dashboard', href: dashboard(), icon: LayoutGrid },
-    { title: 'Find a ride', href: '/rides', icon: Search },
-    { title: 'My bookings', href: '/bookings', icon: CalendarCheck },
-    { title: 'Verify ID', href: '/identity', icon: BadgeCheck },
+    // One "Bookings" entry: its page has both "Find a ride" and "My bookings" tabs.
+    { title: 'Bookings', href: '/bookings', icon: CalendarCheck },
     { title: 'About', href: about(), icon: Info },
 ];
 

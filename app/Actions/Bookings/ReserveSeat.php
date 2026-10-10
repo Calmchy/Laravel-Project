@@ -16,7 +16,11 @@ use Illuminate\Validation\ValidationException;
  */
 class ReserveSeat
 {
-    public function handle(User $passenger, Ride $ride, int $seats = 1): Booking
+    /**
+     * @param  array<string, mixed>  $details  validated booking-form fields (contact + pick-up/return);
+     *                                         empty when called from older code paths.
+     */
+    public function handle(User $passenger, Ride $ride, int $seats = 1, array $details = []): Booking
     {
         if (! $passenger->hasApprovedId()) {
             $this->fail('id', 'Upload a valid ID and wait for approval before booking.');
@@ -45,7 +49,7 @@ class ReserveSeat
                 $this->fail('seats', 'Not enough seats left on this ride.');
             }
 
-            return Booking::create([
+            return Booking::create($details + [
                 'reference_no' => Booking::generateReference(),
                 'ride_id' => $locked->id,
                 'passenger_id' => $passenger->id,

@@ -2,38 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\City;
 use App\Models\Review;
 use App\Models\Ride;
 use App\Support\RidePresenter;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class RideController extends Controller
 {
-    /** GET /rides : search by origin, destination and date. Every filter is validated, then bound by Eloquent (no raw SQL). */
-    public function index(Request $request): Response
+    /**
+     * GET /rides : kept only so old links/bookmarks still work.
+     * Searching now lives in the merged Bookings hub, so we forward the filters there.
+     */
+    public function index(Request $request): RedirectResponse
     {
-        $filters = $request->validate([
-            'origin' => ['nullable', 'integer', 'exists:cities,id'],
-            'destination' => ['nullable', 'integer', 'exists:cities,id'],
-            'date' => ['nullable', 'date'],
-        ]);
-
-        $rides = Ride::with(RidePresenter::WITH)
-            ->available()->withSeatsLeft()
-            ->when($filters['origin'] ?? null, fn ($q, $v) => $q->where('origin_city_id', $v))
-            ->when($filters['destination'] ?? null, fn ($q, $v) => $q->where('destination_city_id', $v))
-            ->when($filters['date'] ?? null, fn ($q, $v) => $q->whereDate('departure_at', $v))
-            ->orderBy('departure_at')
-            ->simplePaginate(12)->withQueryString();
-
-        return Inertia::render('rides/index', [
-            'rides' => $rides->through(fn (Ride $r) => RidePresenter::card($r)),
-            'cities' => City::orderBy('name')->get(['id', 'name']),
-            'filters' => $filters,
-        ]);
+        return redirect()->route('bookings.index', ['tab' => 'find'] + $request->only(['origin', 'destination', 'date']));
     }
 
     /** GET /rides/{ride} : detail page with the driver's average rating and the viewer's own booking, if any. */

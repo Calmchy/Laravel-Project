@@ -27,6 +27,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Reservation -> booking lifecycle
     Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
+    Route::get('/rides/{ride}/book', [BookingController::class, 'create'])->name('bookings.create');
     Route::post('/rides/{ride}/book', [BookingController::class, 'store'])->middleware('throttle:10,1')->name('bookings.store');
     Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
     Route::patch('/bookings/{booking}/{action}', [BookingController::class, 'transition'])
@@ -34,8 +35,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('/bookings/{booking}/reviews', [ReviewController::class, 'store'])->middleware('throttle:10,1')->name('reviews.store');
 
-    // Old static mock page: send people to the real search instead.
-    Route::redirect('/booking', '/rides');
+    // Old static mock page: send people to the merged Bookings hub instead.
+    Route::redirect('/booking', '/bookings');
 });
 
 // ---- Admin only (role checked server-side by the 'admin' middleware) ----

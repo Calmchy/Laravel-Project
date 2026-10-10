@@ -27,18 +27,20 @@ class LookupSeeder extends Seeder
         }
 
         // Eastern Visayas (Region 8) to start; add more provinces/cities as you grow.
+        // Each city carries an approximate centre point [lat, lng] used to centre the booking map.
         $places = [
-            'Leyte' => ['Tacloban City', 'Ormoc City', 'Baybay City', 'Abuyog'],
-            'Southern Leyte' => ['Maasin City'],
-            'Biliran' => ['Naval'],
-            'Samar' => ['Catbalogan City'],
-            'Eastern Samar' => ['Borongan City'],
+            'Leyte' => ['Tacloban City' => [11.2444, 125.0036], 'Ormoc City' => [11.0064, 124.6075], 'Baybay City' => [10.6781, 124.8003], 'Abuyog' => [10.7436, 125.0092]],
+            'Southern Leyte' => ['Maasin City' => [10.1322, 124.8420]],
+            'Biliran' => ['Naval' => [11.5617, 124.4017]],
+            'Samar' => ['Catbalogan City' => [11.7753, 124.8861]],
+            'Eastern Samar' => ['Borongan City' => [11.6078, 125.4331]],
             'Northern Samar' => [],
         ];
         foreach ($places as $province => $cities) {
             $p = Province::firstOrCreate(['name' => $province]);
-            foreach ($cities as $city) {
-                City::firstOrCreate(['province_id' => $p->id, 'name' => $city]);
+            foreach ($cities as $city => [$lat, $lng]) {
+                // updateOrCreate so re-seeding also fills coordinates on existing rows
+                City::updateOrCreate(['province_id' => $p->id, 'name' => $city], ['latitude' => $lat, 'longitude' => $lng]);
             }
         }
 

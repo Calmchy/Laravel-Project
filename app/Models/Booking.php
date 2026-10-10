@@ -14,6 +14,9 @@ class Booking extends Model
         'reference_no', 'ride_id', 'passenger_id', 'seats_booked', 'fare_per_seat',
         'status', 'approved_at', 'confirmed_at', 'completed_at', 'cancelled_at',
         'cancellation_reason',
+        'contact_name', 'contact_address', 'contact_email', 'contact_phone',
+        'pickup_location', 'pickup_lat', 'pickup_lng', 'pickup_at',
+        'return_location', 'return_lat', 'return_lng', 'return_at',
     ];
 
     protected function casts(): array
@@ -25,6 +28,8 @@ class Booking extends Model
             'confirmed_at' => 'datetime',
             'completed_at' => 'datetime',
             'cancelled_at' => 'datetime',
+            'pickup_at' => 'datetime',
+            'return_at' => 'datetime',
         ];
     }
 
